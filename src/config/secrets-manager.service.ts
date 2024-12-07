@@ -1,8 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from "@nestjs/common";
 import {
   SecretsManagerClient,
   GetSecretValueCommand,
-} from '@aws-sdk/client-secrets-manager';
+} from "@aws-sdk/client-secrets-manager";
 
 @Injectable()
 export class SecretsManagerService {
@@ -11,7 +11,7 @@ export class SecretsManagerService {
 
   constructor() {
     this.client = new SecretsManagerClient({
-      region: process.env.AWS_REGION || 'me-central-1',
+      region: process.env.AWS_REGION || "me-central-1",
     });
   }
 
@@ -24,10 +24,10 @@ export class SecretsManagerService {
         return response.SecretString;
       }
 
-      this.logger.error('Secret ${secretName} does not contain a SecretString');
+      this.logger.error("Secret ${secretName} does not contain a SecretString");
       return null;
     } catch (error) {
-      this.logger.error('Failed to fetch secret ${secretName}:', error);
+      this.logger.error("Failed to fetch secret ${secretName}:", error);
       throw error;
     }
   }
