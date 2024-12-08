@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
+
 import { AuthModule } from "./auth/auth.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from "./users/user.module";
@@ -12,13 +11,13 @@ import { TransactionUuidMiddleware } from "./middleware/transaction-uuid.middlew
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    UserModule,
     MongooseModule.forRoot(process.env.MONGO_URI),
-    AuthModule,
     SecretsModule,
+    UserModule,
+    AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, SecretsManagerService],
+  controllers: [],
+  providers: [SecretsManagerService],
   exports: [SecretsManagerService],
 })
 export class AppModule {

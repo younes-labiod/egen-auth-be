@@ -24,10 +24,10 @@ export class SecretsManagerService {
         return response.SecretString;
       }
 
-      this.logger.error("Secret ${secretName} does not contain a SecretString");
+      this.logger.error(`Secret ${secretName} does not contain a SecretString`);
       return null;
     } catch (error) {
-      this.logger.error("Failed to fetch secret ${secretName}:", error);
+      this.logger.error(`Failed to fetch secret ${secretName}:`, error);
       throw error;
     }
   }

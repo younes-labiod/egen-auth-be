@@ -29,6 +29,7 @@ export class AuthService implements OnModuleInit {
       const secret = JSON.parse(secretString);
       this.jwtSecret = secret.JWT_SECRET;
     } else {
+      this.logger.error("Failed to load JWT_SECRET from Secrets Manager.");
       throw new Error("Failed to load JWT_SECRET from Secrets Manager.");
     }
   }
