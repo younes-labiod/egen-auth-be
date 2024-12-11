@@ -21,7 +21,7 @@ export class AuthService implements OnModuleInit {
     private readonly secretsManagerService: SecretsManagerService
   ) {}
 
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     const secretName = process.env.JWT_SECRET_NAME || "prod/jwt-secret";
     const secretString = await this.secretsManagerService.getSecret(secretName);
 
@@ -34,7 +34,7 @@ export class AuthService implements OnModuleInit {
     }
   }
 
-  async signIn(email: string, password: string) {
+  async signIn(email: string, password: string): Promise<{ token: string }> {
     const transactionUuid = RequestContext.getTransactionUuid();
     this.logger.log(`[${transactionUuid}] - Authenticating user ${email}`);
 
@@ -69,7 +69,11 @@ export class AuthService implements OnModuleInit {
     return { token };
   }
 
-  async signUp(email: string, name: string, password: string) {
+  async signUp(
+    email: string,
+    name: string,
+    password: string
+  ): Promise<{ email: string; name: string }> {
     const transactionUuid = RequestContext.getTransactionUuid();
     this.logger.log(`[${transactionUuid}] - Creating user ${email}`);
 
