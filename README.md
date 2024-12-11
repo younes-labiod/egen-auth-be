@@ -2,98 +2,259 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Backend API Documentation
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<p align="center">Comprehensive documentation for the backend API built using <strong>NestJS</strong>. This API implements <strong>JWT-based authentication</strong> and provides secure and scalable solutions for user management.</p>
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Base URL
 
-## Project setup
+All endpoints are prefixed with the base URL:
 
-```bash
-$ npm install
+```
+http://localhost:3000
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Authentication Endpoints
 
-# watch mode
-$ npm run start:dev
+### 1. Sign Up
 
-# production mode
-$ npm run start:prod
+- **Description**: Allows a new user to create an account.
+- **Endpoint**: `POST /auth/signup`
+- **Headers**: None
+
+- **Request Body**:
+
+  ```json
+  {
+    "email": "string",
+    "name": "string",
+    "password": "string"
+  }
+  ```
+
+  - `email`: The user's email address (required).
+  - `name`: The user's name (required).
+  - `password`: The user's password (required, must meet complexity requirements).
+
+- **Response**:
+  - **201 Created**:
+    ```json
+    {
+      "email": "string",
+      "name": "string"
+    }
+    ```
+  - **400 Bad Request**:
+    ```json
+    {
+      "statusCode": 400,
+      "message": "Email is already taken."
+    }
+    ```
+
+### 2. Sign In
+
+- **Description**: Authenticates a user and returns a JWT token.
+- **Endpoint**: `POST /auth/signin`
+- **Headers**: None
+
+- **Request Body**:
+
+  ```json
+  {
+    "email": "string",
+    "password": "string"
+  }
+  ```
+
+  - `email`: The user's email address (required).
+  - `password`: The user's password (required).
+
+- **Response**:
+  - **200 OK**:
+    ```json
+    {
+      "token": "string"
+    }
+    ```
+  - **401 Unauthorized**:
+    ```json
+    {
+      "statusCode": 401,
+      "message": "Invalid credentials."
+    }
+    ```
+
+### 3. Get Profile
+
+- **Description**: Retrieves the authenticated user's profile information.
+- **Endpoint**: `GET /auth/profile`
+
+- **Headers**:
+
+  - `Authorization`: `Bearer <JWT>` (required)
+
+- **Response**:
+  - **200 OK**:
+    ```json
+    {
+      "email": "string",
+      "name": "string"
+    }
+    ```
+  - **401 Unauthorized**:
+    ```json
+    {
+      "statusCode": 401,
+      "message": "Unauthorized"
+    }
+    ```
+
+---
+
+## Common Errors
+
+### Error Format
+
+All errors follow this format:
+
+```json
+{
+  "statusCode": <number>,
+  "message": "string"
+}
 ```
 
-## Run tests
+### Examples
+
+- **400 Bad Request**:
+
+  ```json
+  {
+    "statusCode": 400,
+    "message": "Validation failed."
+  }
+  ```
+
+- **401 Unauthorized**:
+  ```json
+  {
+    "statusCode": 401,
+    "message": "Unauthorized"
+  }
+  ```
+
+---
+
+## Authentication Flow
+
+1. A user signs up using the `POST /auth/signup` endpoint.
+2. The user signs in using the `POST /auth/signin` endpoint to receive a JWT token.
+3. The user includes the JWT token in the `Authorization` header to access protected endpoints like `GET /auth/profile`.
+
+---
+
+## Security Best Practices
+
+- Always use HTTPS in production.
+- Store the JWT secret securely (e.g., in AWS Secrets Manager).
+- Implement rate limiting to prevent brute force attacks.
+- Enforce strong password policies during user sign-up.
+
+---
+
+## Testing the API
+
+Use **Postman** or **cURL** to test the API:
+
+### Example: Sign In with Postman
+
+- **Method**: `POST`
+- **URL**: `http://localhost:3000/auth/signin`
+- **Body** (raw JSON):
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "Password123!"
+  }
+  ```
+- **Headers**:
+  ```
+  Content-Type: application/json
+  ```
+
+### Example: Fetch Profile with cURL
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+curl -X GET http://localhost:3000/auth/profile \
+-H "Authorization: Bearer <JWT>"
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Swagger Documentation
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+The API includes Swagger documentation for interactive testing and exploration.
+
+### Access Swagger UI
+
+1. Run the backend application.
+2. Navigate to the following URL in your browser:
+
+   ```
+   http://localhost:3000/api
+   ```
+
+### Features
+
+- View all available endpoints.
+- See detailed request and response formats.
+- Authenticate directly in the Swagger UI using JWT.
+
+---
+
+## Project Setup
+
+### Install Dependencies
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Run the Application
 
-## Resources
+```bash
+# Development
+npm run start
 
-Check out a few resources that may come in handy when working with NestJS:
+# Watch Mode
+npm run start:dev
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Production Mode
+npm run start:prod
+```
 
-## Support
+### Run Tests
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# Unit Tests
+npm run test
 
-## Stay in touch
+# E2E Tests
+npm run test:e2e
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Test Coverage
+npm run test:cov
+```
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Changelog
+
+- **v1.0**: Initial API implementation with authentication endpoints.
+
+For further questions or issues, contact the backend development team.
