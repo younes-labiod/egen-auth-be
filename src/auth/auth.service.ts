@@ -41,17 +41,13 @@ export class AuthService implements OnModuleInit {
     const user = await this.userService.findByEmail(email);
     if (!user) {
       this.logger.debug(`[${transactionUuid}] - Invalid credentials.`);
-      throw new UnauthorizedException(
-        `[${transactionUuid}] - Invalid credentials.`
-      );
+      throw new UnauthorizedException(`Invalid credentials.`);
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       this.logger.debug(`[${transactionUuid}] - Invalid credentials.`);
-      throw new UnauthorizedException(
-        `[${transactionUuid}] - Invalid credentials.`
-      );
+      throw new UnauthorizedException(`Invalid credentials.`);
     }
 
     if (!this.jwtSecret) {
