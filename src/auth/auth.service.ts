@@ -80,9 +80,7 @@ export class AuthService implements OnModuleInit {
     const existingUser = await this.userService.findByEmail(email);
     if (existingUser) {
       this.logger.debug(`[${transactionUuid}] - Email is already taken.`);
-      throw new BadRequestException(
-        `[${transactionUuid}] - Email is already taken.`
-      );
+      throw new BadRequestException(`Email is already taken.`);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
